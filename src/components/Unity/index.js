@@ -26,6 +26,9 @@ class FormUnity extends Component {
   };
 
   create = () => {
+    document.getElementById(
+      "registrationButton"
+    ).textContent = `Cadastrar unidade`;
     this.setState({ model: { id: 0, name: "" } });
     this.props.unityCreate(this.state.model);
   };
@@ -64,6 +67,9 @@ class ListUnity extends Component {
   };
 
   onEdit = (unity) => {
+    document.getElementById(
+      "registrationButton"
+    ).textContent = `Atualizar a unidade ${unity.name}`;
     PubSub.publish("edit-unity", unity);
   };
 
@@ -86,6 +92,7 @@ class ListUnity extends Component {
                   color="primary"
                   size="sm"
                   onClick={(e) => this.onEdit(unity)}
+                  disabled
                 >
                   Editar
                 </Button>
@@ -125,6 +132,17 @@ export default class UnityBox extends Component {
       .then((units) => this.setState({ units }))
       .catch((e) => console.log(e));
   }
+
+  edit = (unity) => {
+    if (unity.id !== 0) {
+      document.getElementById("registrationButton").textContent =
+        "Atualizar de Unidades";
+    } else {
+      document.getElementById("registrationButton").textContent =
+        "Cadastrar de Unidades";
+    }
+    this.setState({ unity });
+  };
 
   save = (unity) => {
     let data = {
@@ -207,11 +225,14 @@ export default class UnityBox extends Component {
 
         <div className="row">
           <div className="col-md-6 my-3">
-            <h2 className="font-weight-bold text-center">
+            <h2
+              id="registrationButton"
+              className="font-weight-bold text-center"
+            >
               {" "}
-              Cadastro de Unidades{" "}
+              Cadastrar unidade{" "}
             </h2>
-            <FormUnity unityCreate={this.save} />
+            <FormUnity unityCreate={this.save} edit={this.edit} />
           </div>
           <div className="col-md-6 my-3">
             <h2 className="font-weight-bold text-center">
