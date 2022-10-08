@@ -39,7 +39,7 @@ class FormUnity extends Component {
     if (this.state.model.name === "") {
       alert("Preencha o campo nome");
     } else if (
-      this.state.model.zipCode.length < 0 &&
+      this.state.model.zipCode.length > 0 &&
       this.state.model.zipCode.length < 8
     ) {
       alert("Preencha o campo CEP corretamente");
