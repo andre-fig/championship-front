@@ -36,7 +36,16 @@ class FormUnity extends Component {
     this.setState({
       model: { id: 0, name: "", address: "", city: "", state: "", zipCode: "" },
     });
-    this.props.unityCreate(this.state.model);
+    if (this.state.model.name === "") {
+      alert("Preencha o campo nome");
+    } else if (
+      this.state.model.zipCode.length < 0 &&
+      this.state.model.zipCode.length < 8
+    ) {
+      alert("Preencha o campo CEP corretamente");
+    } else {
+      this.props.unityCreate(this.state.model);
+    }
   };
 
   componentWillMount() {
@@ -49,7 +58,7 @@ class FormUnity extends Component {
     return (
       <Form>
         <FormGroup>
-          <Label for="name">Nome:</Label>
+          <Label for="name">Nome*:</Label>
           <Input
             id="name"
             type="text"
@@ -77,6 +86,7 @@ class FormUnity extends Component {
           <Input
             id="state"
             type="text"
+            maxLength={2}
             value={this.state.model.state}
             placeholder="Estado da unidade"
             onChange={(e) => this.setValues(e, "state")}
@@ -84,13 +94,23 @@ class FormUnity extends Component {
           <Label for="zipCode">CEP:</Label>
           <Input
             id="zipCode"
-            type="text"
+            type="number"
             value={this.state.model.zipCode}
+            onKeyDown={(evt) =>
+              ["e", "E", "+", "-", ",", ".", "_", "/"].includes(evt.key) &&
+              evt.preventDefault()
+            }
+            onInput={(e) => {
+              if (e.target.value.length > 8) {
+                e.target.value = e.target.value.slice(0, 8);
+              }
+            }}
+            maxLength={8}
             placeholder="CEP da unidade"
             onChange={(e) => this.setValues(e, "zipCode")}
           />
         </FormGroup>
-        <Button color="success" block onClick={this.create}>
+        <Button id="saveButton" color="success" block onClick={this.create}>
           {" "}
           Salvar{" "}
         </Button>
@@ -108,17 +128,39 @@ class ListUnity extends Component {
     document.getElementById(
       "registrationButton"
     ).textContent = `Atualizar a unidade ${unity.name}`;
+    document.getElementById("saveButton").textContent = `Salvar alterações`;
+    document.getElementById("name").focus();
+
     PubSub.publish("edit-unity", unity);
   };
 
   render() {
     const { units } = this.props;
+
+    const printAddress = (address, city, state, zipCode) => {
+      let addressText = address ? `${address}, ` : "";
+      addressText = city ? `${addressText}${city}` : addressText;
+      addressText = state ? `${addressText} - ${state}` : addressText;
+      addressText = addressText + ". ";
+
+      if (zipCode) {
+        const zipCodeFormatted = zipCode.replace(
+          /(\d{2})(\d{3})(\d{3})/,
+          "$1.$2-$3"
+        );
+
+        addressText = `${addressText}CEP: ${zipCodeFormatted}`;
+      }
+
+      return addressText;
+    };
+
     return (
-      <Table className="table-bordered text-center">
+      <Table className="table-bordered text-center align-middle">
         <thead className="thead-dark">
           <tr>
             <th>Nome</th>
-            <th colSpan={3}>Endereço</th>
+            <th>Endereço</th>
             <th colSpan={2}>Ações</th>
           </tr>
         </thead>
@@ -126,15 +168,19 @@ class ListUnity extends Component {
           {units.map((unity) => (
             <tr key={unity.id}>
               <td>{unity.name}</td>
-              <td>{unity.city}</td>
-              <td>{unity.state}</td>
-              <td>{unity.zipCode}</td>
+              <td>
+                {printAddress(
+                  unity.address,
+                  unity.city,
+                  unity.state,
+                  unity.zipCode
+                )}
+              </td>
               <td>
                 <Button
                   color="primary"
                   size="sm"
                   onClick={(e) => this.onEdit(unity)}
-                  disabled
                 >
                   Editar
                 </Button>
@@ -178,10 +224,10 @@ export default class UnityBox extends Component {
   edit = (unity) => {
     if (unity.id !== 0) {
       document.getElementById("registrationButton").textContent =
-        "Atualizar de Unidades";
+        "Atualizar unidades";
     } else {
       document.getElementById("registrationButton").textContent =
-        "Cadastrar de Unidades";
+        "Cadastrar unidades";
     }
     this.setState({ unity });
   };
@@ -283,7 +329,7 @@ export default class UnityBox extends Component {
           <div className="col-md-6 my-3">
             <h2 className="font-weight-bold text-center">
               {" "}
-              Lista de Unidades{" "}
+              Lista de unidades{" "}
             </h2>
             <ListUnity units={this.state.units} deleteUnity={this.delete} />
           </div>
