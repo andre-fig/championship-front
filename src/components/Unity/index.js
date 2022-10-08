@@ -19,7 +19,7 @@ class FormUnity extends Component {
       address: "",
       city: "",
       state: "",
-      zipCode: 0,
+      zipCode: "",
     },
   };
 
@@ -34,7 +34,7 @@ class FormUnity extends Component {
       "registrationButton"
     ).textContent = `Cadastrar unidade`;
     this.setState({
-      model: { id: 0, name: "", address: "", city: "", state: "", zipCode: 0 },
+      model: { id: 0, name: "", address: "", city: "", state: "", zipCode: "" },
     });
     this.props.unityCreate(this.state.model);
   };
