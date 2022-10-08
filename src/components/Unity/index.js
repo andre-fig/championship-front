@@ -128,7 +128,7 @@ class ListUnity extends Component {
     document.getElementById(
       "registrationButton"
     ).textContent = `Atualizar a unidade ${unity.name}`;
-    document.getElementById("saveButton").textContent = `Salvar alterações`;
+    // document.getElementById("saveButton").textContent = `Salvar alterações`;
     document.getElementById("name").focus();
 
     PubSub.publish("edit-unity", unity);
