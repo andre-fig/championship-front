@@ -138,10 +138,16 @@ class ListUnity extends Component {
     const { units } = this.props;
 
     const printAddress = (address, city, state, zipCode) => {
-      let addressText = address ? `${address}, ` : "";
-      addressText = city ? `${addressText}${city}` : addressText;
+      let addressText = address ? `${address}` : "";
+      if (address && city) {
+        addressText += `, ${city}`;
+      } else if (city) {
+        addressText += `${city}`;
+      }
       addressText = state ? `${addressText} - ${state}` : addressText;
-      addressText = addressText + ". ";
+      if (address || city || state || zipCode) {
+        addressText = addressText + ". ";
+      }
 
       if (zipCode) {
         const zipCodeFormatted = zipCode.replace(
