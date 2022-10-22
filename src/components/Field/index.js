@@ -11,15 +11,12 @@ import {
   Alert,
 } from "reactstrap";
 
-class FormUnity extends Component {
+class FormField extends Component {
   state = {
     model: {
       id: 0,
-      name: "",
-      address: "",
-      city: "",
-      state: "",
-      zipCode: "",
+      unity: "",
+      identifier: "",
     },
   };
 
@@ -31,23 +28,21 @@ class FormUnity extends Component {
 
   create = () => {
     document.getElementById(
-      "registrationButton"
+      "fieldRegistrationButton"
     ).textContent = `Cadastrar quadra`;
     this.setState({
-      model: { id: 0, name: "", address: "", city: "", state: "", zipCode: "" },
+      model: { id: 0, unity: "", identifier: "" },
     });
-    if (this.state.model.name === "") {
-      alert("Preencha o campo nome");
-    } else if (this.state.model.zipCode.length < 8) {
-      alert("Preencha o campo CEP corretamente");
+    if (this.state.model.identifier === "") {
+      alert("Preencha o campo identificador");
     } else {
-      this.props.unityCreate(this.state.model);
+      this.props.fieldCreate(this.state.model);
     }
   };
 
   componentWillMount() {
-    PubSub.subscribe("edit-unity", (topic, unity) => {
-      this.setState({ model: unity });
+    PubSub.subscribe("edit-field", (topic, field) => {
+      this.setState({ model: field });
     });
   }
 
@@ -55,58 +50,25 @@ class FormUnity extends Component {
     return (
       <Form>
         <FormGroup>
-          <Label for="name">Nome*:</Label>
+          <Label for="unity">Id. da Unidade:</Label>
           <Input
-            id="name"
+            id="unity"
             type="text"
-            value={this.state.model.name}
-            placeholder="Nome da quadra"
-            onChange={(e) => this.setValues(e, "name")}
+            value={this.state.model.unity}
+            placeholder="Unidade da quadra"
+            onChange={(e) => this.setValues(e, "unity")}
           />
-          <Label for="address">Endereço:</Label>
+
+          <Label for="identifier">Identificador*:</Label>
           <Input
-            id="address"
+            id="identifier"
             type="text"
-            value={this.state.model.address}
-            placeholder="Endereço da quadra"
-            onChange={(e) => this.setValues(e, "address")}
-          />
-          <Label for="city">Cidade:</Label>
-          <Input
-            id="city"
-            type="text"
-            value={this.state.model.city}
-            placeholder="Nome da quadra"
-            onChange={(e) => this.setValues(e, "city")}
-          />
-          <Label for="state">Estado:</Label>
-          <Input
-            id="state"
-            type="text"
-            value={this.state.model.state}
-            placeholder="Estado da quadra"
-            onChange={(e) => this.setValues(e, "state")}
-          />
-          <Label for="zipCode">CEP:</Label>
-          <Input
-            id="zipCode"
-            type="number"
-            value={this.state.model.zipCode}
-            onKeyDown={(evt) =>
-              ["e", "E", "+", "-", ",", ".", "_", "/"].includes(evt.key) &&
-              evt.preventDefault()
-            }
-            onInput={(e) => {
-              if (e.target.value.length > 8) {
-                e.target.value = e.target.value.slice(0, 8);
-              }
-            }}
-            maxLength={8}
-            placeholder="CEP da quadra"
-            onChange={(e) => this.setValues(e, "zipCode")}
+            value={this.state.model.identifier}
+            placeholder="Identificador da quadra"
+            onChange={(e) => this.setValues(e, "identifier")}
           />
         </FormGroup>
-        <Button color="success" block onClick={this.create}>
+        <Button id="saveButton" color="success" block onClick={this.create}>
           {" "}
           Salvar{" "}
         </Button>
@@ -115,42 +77,43 @@ class FormUnity extends Component {
   }
 }
 
-class ListUnity extends Component {
+class ListField extends Component {
   delete = (id) => {
-    this.props.deleteUnity(id);
+    this.props.deleteField(id);
   };
 
-  onEdit = (unity) => {
+  onEdit = (field) => {
     document.getElementById(
-      "registrationButton"
-    ).textContent = `Atualizar a quadra ${unity.name}`;
-    PubSub.publish("edit-unity", unity);
+      "fieldRegistrationButton"
+    ).textContent = `Atualizar a quadra ${field.identifier}`;
+    // document.getElementById("saveButton").textContent = `Salvar alterações`;
+    document.getElementById("identifier").focus();
+
+    PubSub.publish("edit-field", field);
   };
 
   render() {
-    const { units } = this.props;
+    const { fields } = this.props;
+
     return (
-      <Table className="table-bordered text-center">
+      <Table className="table-bordered text-center align-middle">
         <thead className="thead-dark">
           <tr>
-            <th>Nome</th>
-            <th colSpan={3}>Endereço</th>
+            <th>Unidade</th>
+            <th>Identificador</th>
             <th colSpan={2}>Ações</th>
           </tr>
         </thead>
         <tbody>
-          {units.map((unity) => (
-            <tr key={unity.id}>
-              <td>{unity.name}</td>
-              <td>{unity.city}</td>
-              <td>{unity.state}</td>
-              <td>{unity.zipCode}</td>
+          {fields.map((field) => (
+            <tr key={field.id}>
+              <td>{field.unity}</td>
+              <td>{field.identifier}</td>
               <td>
                 <Button
                   color="primary"
                   size="sm"
-                  onClick={(e) => this.onEdit(unity)}
-                  disabled
+                  onClick={(e) => this.onEdit(field)}
                 >
                   Editar
                 </Button>
@@ -159,7 +122,7 @@ class ListUnity extends Component {
                 <Button
                   color="danger"
                   size="sm"
-                  onClick={(e) => this.delete(unity.id)}
+                  onClick={(e) => this.delete(field.id)}
                 >
                   Deletar
                 </Button>
@@ -172,12 +135,12 @@ class ListUnity extends Component {
   }
 }
 
-export default class UnityBox extends Component {
-  //   Url = "http://localhost:3001/units";
-  Url = "https://mack-championship-api.herokuapp.com/units";
+export default class FieldBox extends Component {
+  //   Url = "http://localhost:3001/fields";
+  Url = "https://mack-championship-api.herokuapp.com/fields";
 
   state = {
-    units: [],
+    fields: [],
     message: {
       text: "",
       alert: "",
@@ -187,29 +150,26 @@ export default class UnityBox extends Component {
   componentDidMount() {
     fetch(this.Url)
       .then((response) => response.json())
-      .then((units) => this.setState({ units }))
+      .then((fields) => this.setState({ fields }))
       .catch((e) => console.log(e));
   }
 
-  edit = (unity) => {
-    if (unity.id !== 0) {
-      document.getElementById("registrationButton").textContent =
-        "Atualizar de Unidades";
+  edit = (field) => {
+    if (field.id !== 0) {
+      document.getElementById("fieldRegistrationButton").textContent =
+        "Atualizar quadras";
     } else {
-      document.getElementById("registrationButton").textContent =
-        "Cadastrar de Unidades";
+      document.getElementById("fieldRegistrationButton").textContent =
+        "Cadastrar quadras";
     }
-    this.setState({ unity });
+    this.setState({ field });
   };
 
-  save = (unity) => {
+  save = (field) => {
     let data = {
-      id: parseInt(unity.id),
-      name: unity.name,
-      address: unity.address,
-      city: unity.city,
-      state: unity.state,
-      zipCode: parseInt(unity.zipCode),
+      id: parseInt(field.id),
+      identifier: field.identifier,
+      unity: field.unity,
     };
 
     const requestInfo = {
@@ -223,11 +183,11 @@ export default class UnityBox extends Component {
     if (data.id === 0) {
       fetch(this.Url, requestInfo)
         .then((response) => response.json())
-        .then((newUnity) => {
-          let { units } = this.state;
-          units.push(newUnity);
+        .then((newField) => {
+          let { fields } = this.state;
+          fields.push(newField);
           this.setState({
-            units,
+            fields,
             // message: {
             //   text: "Nova quadra adicionada com sucesso!",
             //   alert: "success",
@@ -239,13 +199,13 @@ export default class UnityBox extends Component {
     } else {
       fetch(`${this.Url}/${data.id}`, requestInfo)
         .then((response) => response.json())
-        .then((updatedUnity) => {
-          let { units } = this.state;
-          let position = units.findIndex((unity) => unity.id === data.id);
-          units[position] = updatedUnity;
+        .then((updatedField) => {
+          let { fields } = this.state;
+          let position = fields.findIndex((field) => field.id === data.id);
+          fields[position] = updatedField;
           this.setState({
-            units,
-            // message: { text: "Unidade atualizada com sucesso!", alert: "info" },
+            fields,
+            // message: { text: "Quadra atualizada com sucesso!", alert: "info" },
           });
           this.timerMessage(3000);
         })
@@ -257,10 +217,10 @@ export default class UnityBox extends Component {
     fetch(`${this.Url}/${id}`, { method: "DELETE" })
       .then((response) => response.json())
       .then((rows) => {
-        const units = this.state.units.filter((unity) => unity.id !== id);
+        const fields = this.state.fields.filter((field) => field.id !== id);
         this.setState({
-          units,
-          //   message: { text: "Unidade apagada com sucesso.", alert: "danger" },
+          fields,
+          //   message: { text: "Quadra apagada com sucesso.", alert: "danger" },
         });
         this.timerMessage(3000);
       })
@@ -288,17 +248,17 @@ export default class UnityBox extends Component {
         <div className="row">
           <div className="col-md-6 my-3">
             <h2
-              id="registrationButton"
+              id="fieldRegistrationButton"
               className="font-weight-bold text-center"
             >
               {" "}
               Cadastrar quadra{" "}
             </h2>
-            <FormUnity unityCreate={this.save} edit={this.edit} />
+            <FormField fieldCreate={this.save} edit={this.edit} />
           </div>
           <div className="col-md-6 my-3">
             <h2 className="font-weight-bold text-center"> Lista de quadras </h2>
-            <ListUnity units={this.state.units} deleteUnity={this.delete} />
+            <ListField fields={this.state.fields} deleteField={this.delete} />
           </div>
         </div>
       </div>

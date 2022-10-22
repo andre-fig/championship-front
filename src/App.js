@@ -9,8 +9,8 @@ function App() {
       <Header title="Sistema de Gerenciamento de Campeonatos" />
       <br />
       <UnityBox />
-      {/* <br />
-      <FieldBox /> */}
+      <br />
+      <FieldBox />
     </div>
   );
 }

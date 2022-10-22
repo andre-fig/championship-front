@@ -165,6 +165,7 @@ class ListUnity extends Component {
       <Table className="table-bordered text-center align-middle">
         <thead className="thead-dark">
           <tr>
+            <td>Id.</td>
             <th>Nome</th>
             <th>Endereço</th>
             <th colSpan={2}>Ações</th>
@@ -173,6 +174,7 @@ class ListUnity extends Component {
         <tbody>
           {units.map((unity) => (
             <tr key={unity.id}>
+              <td>{unity.id}</td>
               <td>{unity.name}</td>
               <td>
                 {printAddress(
