@@ -1,18 +1,13 @@
-import "./App.css";
-import FieldBox from "./components/Field";
-import Header from "./components/Header";
-import UnityBox from "./components/Unity";
+import React from "react";
+import RoutesApp from "./routes";
+import { AuthProvider } from "./contexts/auth";
+import GlobalStyle from "./styles/global";
 
-function App() {
-  return (
-    <div className="container">
-      <Header title="Sistema de Gerenciamento de Campeonatos" />
-      <br />
-      <UnityBox />
-      <br />
-      <FieldBox />
-    </div>
-  );
-}
+const App = () => (
+  <AuthProvider>
+    <RoutesApp />
+    <GlobalStyle />
+  </AuthProvider>
+);
 
 export default App;
