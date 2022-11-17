@@ -11,6 +11,7 @@ function ColorSchemesExample() {
           <Nav.Link href="/units">Units</Nav.Link> <br />
           <Nav.Link href="/fields">Fields</Nav.Link> <br />
           <Nav.Link href="/championships">Championships</Nav.Link> <br />
+          <Nav.Link href="/teams">Teams</Nav.Link> <br />
         </Nav>
       </Container>
     </Navbar>
