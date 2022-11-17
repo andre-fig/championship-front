@@ -31,8 +31,8 @@ const RoutesApp = () => {
             path="/championships"
             element={<Private Item={Championships} />}
           />
-          <Route path="/teams" element={<Private Item={Teams} />} />
-          <Route path="/enrollments" element={<Private Item={Enrollments} />} />
+          {/* <Route path="/teams" element={<Private Item={Teams} />} />
+          <Route path="/enrollments" element={<Private Item={Enrollments} />} /> */}
         </Routes>
       </Fragment>
     </BrowserRouter>
