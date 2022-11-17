@@ -7,6 +7,8 @@ import Signup from "../pages/Signup";
 import Units from "../pages/Units";
 import Fields from "../pages/Fields";
 import Championships from "../pages/Championships";
+import Teams from "../pages/Teams";
+import Enrollments from "../pages/Enrollments";
 
 const Private = ({ Item }) => {
   const { signed } = useAuth();
@@ -29,6 +31,8 @@ const RoutesApp = () => {
             path="/championships"
             element={<Private Item={Championships} />}
           />
+          <Route path="/teams" element={<Private Item={Teams} />} />
+          <Route path="/enrollments" element={<Private Item={Enrollments} />} />
         </Routes>
       </Fragment>
     </BrowserRouter>
