@@ -33,7 +33,7 @@ a) Os seguintes clientes deverão estar cadastrados no sistema:
 
 ** Número de sucedidos: ** 2
 
-** Combertura de testes bem-sucedidos: ** 100%
+** Cobertura de testes bem-sucedidos: ** 100%
 
 ## TST02 Falha no login
 
@@ -63,7 +63,7 @@ a) O usuário não deve estar cadastrado no sistema
 
 ** Número de sucedidos: ** 2
 
-** Combertura de testes bem-sucedidos: ** 100%
+** Cobertura de testes bem-sucedidos: ** 100%
 
 ## TST03 Deslogar do sistema
 
@@ -93,7 +93,7 @@ a) O usuário deverá estar logado no sistema
 
 ** Número de sucedidos: ** 2
 
-** Combertura de testes bem-sucedidos: ** 100%
+** Cobertura de testes bem-sucedidos: ** 100%
 
 ## TST04 Cadastrar campeonato
 
@@ -125,7 +125,7 @@ a) O usuário deverá estar logado no sistema
 
 ** Número de sucedidos: ** 2
 
-** Combertura de testes bem-sucedidos: ** 100%
+** Cobertura de testes bem-sucedidos: ** 100%
 
 ## TST05 Cadastrar campeonato com dados em branco
 
@@ -157,4 +157,4 @@ a) O usuário deverá estar logado no sistema
 
 ** Número de sucedidos: ** 2
 
-** Combertura de testes bem-sucedidos: ** 100%
+** Cobertura de testes bem-sucedidos: ** 100%
