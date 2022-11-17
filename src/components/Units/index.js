@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import PubSub from "pubsub-js";
-
+import { Alert } from "reactstrap";
 import {
-  Table,
   Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Alert,
-} from "reactstrap";
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Box,
+  TextField,
+} from "@mui/material";
 
 class FormUnity extends Component {
   state = {
@@ -56,34 +57,47 @@ class FormUnity extends Component {
 
   render() {
     return (
-      <Form>
-        <FormGroup>
-          <Label for="name">Nome*:</Label>
-          <Input
+      <Box
+        component="form"
+        sx={{
+          "& .MuiTextField-root": { m: 1, width: "25ch" },
+        }}
+        noValidate
+        autoComplete="off"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <div>
+          <TextField
+            label="Nome"
             id="name"
             type="text"
             value={this.state.model.name}
             placeholder="Nome da unidade"
             onChange={(e) => this.setValues(e, "name")}
           />
-          <Label for="address">Endereço:</Label>
-          <Input
+
+          <TextField
+            label="Endereço"
             id="address"
             type="text"
             value={this.state.model.address}
             placeholder="Endereço da unidade"
             onChange={(e) => this.setValues(e, "address")}
           />
-          <Label for="city">Cidade:</Label>
-          <Input
+
+          <TextField
+            label="Cidade"
             id="city"
             type="text"
             value={this.state.model.city}
             placeholder="Nome da unidade"
             onChange={(e) => this.setValues(e, "city")}
           />
-          <Label for="state">Estado:</Label>
-          <Input
+
+          <TextField
+            label="Estado"
             id="state"
             type="text"
             maxLength={2}
@@ -91,8 +105,9 @@ class FormUnity extends Component {
             placeholder="Estado da unidade"
             onChange={(e) => this.setValues(e, "state")}
           />
-          <Label for="zipCode">CEP:</Label>
-          <Input
+
+          <TextField
+            label="CEP"
             id="zipCode"
             type="number"
             value={this.state.model.zipCode}
@@ -109,12 +124,12 @@ class FormUnity extends Component {
             placeholder="CEP da unidade"
             onChange={(e) => this.setValues(e, "zipCode")}
           />
-        </FormGroup>
-        <Button id="saveButton" color="success" block onClick={this.create}>
+        </div>
+        <Button id="saveButton" variant="contained" onClick={this.create}>
           {" "}
           Salvar{" "}
         </Button>
-      </Form>
+      </Box>
     );
   }
 }
@@ -150,12 +165,13 @@ class ListUnity extends Component {
       }
 
       if (zipCode) {
-        const zipCodeFormatted = zipCode.replace(
-          /(\d{2})(\d{3})(\d{3})/,
-          "$1.$2-$3"
-        );
+        // const zipCodeFormatted = zipCode.replace(
+        //   /(\d{2})(\d{3})(\d{3})/,
+        //   "$1.$2-$3"
+        // );
 
-        addressText = `${addressText}CEP: ${zipCodeFormatted}`;
+        // addressText = `${addressText}CEP: ${zipCodeFormatted}`;
+        addressText = `${addressText}CEP: ${zipCode}`;
       }
 
       return addressText;
@@ -163,48 +179,43 @@ class ListUnity extends Component {
 
     return (
       <Table className="table-bordered text-center align-middle">
-        <thead className="thead-dark">
-          <tr>
-            <td>Id.</td>
-            <th>Nome</th>
-            <th>Endereço</th>
-            <th colSpan={2}>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
+        <TableHead className="thead-dark">
+          <TableRow>
+            <TableCell>Id.</TableCell>
+            <TableCell>Nome</TableCell>
+            <TableCell>Endereço</TableCell>
+            <TableCell colSpan={2}>Ações</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {units.map((unity) => (
-            <tr key={unity.id}>
-              <td>{unity.id}</td>
-              <td>{unity.name}</td>
-              <td>
+            <TableRow key={unity.id}>
+              <TableCell>{unity.id}</TableCell>
+              <TableCell>{unity.name}</TableCell>
+              <TableCell>
                 {printAddress(
                   unity.address,
                   unity.city,
                   unity.state,
                   unity.zipCode
                 )}
-              </td>
-              <td>
-                <Button
-                  color="primary"
-                  size="sm"
-                  onClick={(e) => this.onEdit(unity)}
-                >
+              </TableCell>
+              <TableCell>
+                <Button variant="contained" onClick={(e) => this.onEdit(unity)}>
                   Editar
                 </Button>
-              </td>
-              <td>
+              </TableCell>
+              <TableCell>
                 <Button
-                  color="danger"
-                  size="sm"
+                  variant="contained"
                   onClick={(e) => this.delete(unity.id)}
                 >
                   Deletar
                 </Button>
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
+        </TableBody>
       </Table>
     );
   }
@@ -266,10 +277,10 @@ export default class UnityBox extends Component {
           units.push(newUnity);
           this.setState({
             units,
-            // message: {
-            //   text: "Nova unidade adicionada com sucesso!",
-            //   alert: "success",
-            // },
+            message: {
+              text: "Nova unidade adicionada com sucesso!",
+              alert: "success",
+            },
           });
           this.timerMessage(3000);
         })
@@ -283,7 +294,7 @@ export default class UnityBox extends Component {
           units[position] = updatedUnity;
           this.setState({
             units,
-            // message: { text: "Unidade atualizada com sucesso!", alert: "info" },
+            message: { text: "Unidade atualizada com sucesso!", alert: "info" },
           });
           this.timerMessage(3000);
         })

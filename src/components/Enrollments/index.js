@@ -1,15 +1,9 @@
 import React, { Component } from "react";
 import PubSub from "pubsub-js";
 
-import {
-  Table,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Alert,
-} from "reactstrap";
+import { Table, Alert } from "reactstrap";
+
+import { Button, Box, TextField } from "@mui/material";
 
 class FormField extends Component {
   state = {
@@ -48,10 +42,10 @@ class FormField extends Component {
 
   render() {
     return (
-      <Form>
-        <FormGroup>
-          <Label for="unity">Id. da Unidade:</Label>
-          <Input
+      <Box>
+        <div>
+          <TextField
+            label="Id. da Unidade"
             id="unity"
             type="text"
             value={this.state.model.unity}
@@ -59,20 +53,20 @@ class FormField extends Component {
             onChange={(e) => this.setValues(e, "unity")}
           />
 
-          <Label for="identifier">Identificador*:</Label>
-          <Input
+          <TextField
+            label="Identificador"
             id="identifier"
             type="text"
             value={this.state.model.identifier}
             placeholder="Identificador da quadra"
             onChange={(e) => this.setValues(e, "identifier")}
           />
-        </FormGroup>
-        <Button id="saveButton" color="success" block onClick={this.create}>
+        </div>
+        <Button id="saveButton" variant="contained" onClick={this.create}>
           {" "}
           Salvar{" "}
         </Button>
-      </Form>
+      </Box>
     );
   }
 }
@@ -110,18 +104,13 @@ class ListField extends Component {
               <td>{field.unity}</td>
               <td>{field.identifier}</td>
               <td>
-                <Button
-                  color="primary"
-                  size="sm"
-                  onClick={(e) => this.onEdit(field)}
-                >
+                <Button variant="contained" onClick={(e) => this.onEdit(field)}>
                   Editar
                 </Button>
               </td>
               <td>
                 <Button
-                  color="danger"
-                  size="sm"
+                  variant="contained"
                   onClick={(e) => this.delete(field.id)}
                 >
                   Deletar
